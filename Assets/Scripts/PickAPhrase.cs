@@ -11,10 +11,11 @@ public class PickAPhrase : MonoBehaviour
     public Text error;
     public InputField deInputfield;
     public InputField paraInputfield;
-    [SerializeField] GameObject preview;
+    [SerializeField] GameObject letterTemplate;
 
     public string deText;
     public string paraText;
+    public int phraseIndex;
 
     public string selectedButtonText;
     private Color deselectedColor;
@@ -22,6 +23,7 @@ public class PickAPhrase : MonoBehaviour
 
     private void OnEnable()
     {
+        phraseIndex = 0;
         error.text = "";
         deText = "";
         paraText = "";
@@ -34,9 +36,10 @@ public class PickAPhrase : MonoBehaviour
         deselectedColor = new Color(83f / 255f, 91f / 255f, 76f / 255f, 1f);
         selectedColor = new Color(255f / 255f, 255f / 255f, 255f / 255f, 1f);
 
-        foreach (Button button in buttons)
+        for (int i = 0; i < buttons.Length; i++)
         {
-            button.onClick.AddListener(() => ButtonClicked(button));
+            int index = i; // Cria uma cópia local da variável 'i' para cada iteração
+            buttons[i].onClick.AddListener(() => ButtonClicked(index));
         }
 
         foreach (Button button in buttons)
@@ -53,32 +56,25 @@ public class PickAPhrase : MonoBehaviour
         selectedButtonText = "";
     }
 
-    void ButtonClicked(Button clickedButton)
+    void ButtonClicked(int buttonIndex)
     {
-        
-        foreach (Button button in buttons)
+        // Percorre todos os botões
+        for (int i = 0; i < buttons.Length; i++)
         {
-            Image image = button.GetComponent<Image>();
+            
+            Image image = buttons[i].GetComponent<Image>();
             Color color = image.color;
-            color.a = 0f;
+            color.a = (i == buttonIndex) ? 1f : 0f; 
             image.color = color;
 
-            Text buttonText = button.GetComponentInChildren<Text>();
-            buttonText.color = deselectedColor;
+            
+            Text buttonText = buttons[i].GetComponentInChildren<Text>();
+            buttonText.color = (i == buttonIndex) ? selectedColor : deselectedColor; 
         }
 
         
-        Image clickedButtonImage = clickedButton.GetComponent<Image>();
-        Color clickedButtonColor = clickedButtonImage.color;
-        clickedButtonColor.a = 1f;
-        clickedButtonImage.color = clickedButtonColor;
-
-        
-        Text clickedButtonText = clickedButton.GetComponentInChildren<Text>();
-        clickedButtonText.color = selectedColor;
-
-        
-        selectedButtonText = clickedButtonText.text;
+        selectedButtonText = buttons[buttonIndex].GetComponentInChildren<Text>().text;
+        phraseIndex = buttonIndex;
     }
 
     private void OnDisable()
@@ -97,10 +93,23 @@ public class PickAPhrase : MonoBehaviour
             deText = deInputfield.text;
             paraText = paraInputfield.text;
             
-            preview.SetActive(true);
+            letterTemplate.SetActive(true);
             gameObject.SetActive(false);
 
-        } else
+        } 
+        else if (deInputfield.text == "")
+
+        {
+            error.text = "Escreva o seu nome";
+
+        }
+        else if (paraInputfield.text == "")
+
+        {
+            error.text = "Escreva o nome para quem está enviando a carta";
+
+        }
+        else
         {
             error.text = "Selecione uma frase.";
         }

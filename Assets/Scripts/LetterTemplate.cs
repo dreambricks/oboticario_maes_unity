@@ -11,8 +11,8 @@ public class LetterTemplate : MonoBehaviour
     public Text deParaText;
 
     public GameObject objectToSave;
-    public int width = 1080;
-    public int height = 1920;
+    public int width = 2362;
+    public int height = 3496;
 
     public Sprite[] templates;
 

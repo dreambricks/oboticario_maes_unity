@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +9,7 @@ public class PickAPhrase : MonoBehaviour
     public InputField deInputfield;
     public InputField paraInputfield;
     [SerializeField] GameObject letterTemplate;
+    [SerializeField] GameObject preview;
 
     public string deText;
     public string paraText;
@@ -92,8 +90,9 @@ public class PickAPhrase : MonoBehaviour
 
             deText = deInputfield.text;
             paraText = paraInputfield.text;
-            
+
             letterTemplate.SetActive(true);
+            preview.gameObject.SetActive(true);
             gameObject.SetActive(false);
 
         } 

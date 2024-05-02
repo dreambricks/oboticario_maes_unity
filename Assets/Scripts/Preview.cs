@@ -13,6 +13,16 @@ public class Preview : MonoBehaviour
 
     private void OnEnable()
     {
+        panel.GetComponent<Image>().sprite = null;
+
+        StartCoroutine(LoadPreview());
+    }
+
+    IEnumerator LoadPreview()
+    {
+
+        yield return new WaitForSeconds(4);
+
         continueButton.onClick.AddListener(() => GoToQRCode());
 
         imagePath = Application.streamingAssetsPath + "/savedImage.png";
@@ -20,16 +30,16 @@ public class Preview : MonoBehaviour
 
         if (!string.IsNullOrEmpty(imagePath))
         {
-            
+
             Texture2D texture = LoadTextureFromFile(imagePath);
 
-            
+
             if (texture != null)
             {
-                
+
                 Image panelImage = panel.GetComponent<Image>();
 
-                
+
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 panelImage.sprite = sprite;
             }

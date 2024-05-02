@@ -16,11 +16,11 @@ public class LetterTemplate : MonoBehaviour
 
     public Sprite[] templates;
 
+    public Camera renderCamera;
+
     private void OnEnable()
     {
         deParaText.text = "";
-
-        PickATemplate();
 
         saveImage();
     }
@@ -30,23 +30,26 @@ public class LetterTemplate : MonoBehaviour
     {
         deParaText.text = phrase.deText + "\n" + phrase.paraText;
 
-        SaveAsImage();
+        StartCoroutine(SaveAsImage());
 
-        preview.gameObject.SetActive(true);
-        gameObject.SetActive(false);
-     
     }
 
-    public void SaveAsImage()
+    IEnumerator SaveAsImage()
     {
-       
+
+        yield return new WaitForSeconds(1);
+
+        PickATemplate();
+
+        yield return new WaitForSeconds(1);
+
         RenderTexture renderTexture = new RenderTexture(width, height, 24);
         
         Texture2D texture = new Texture2D(width, height, TextureFormat.RGB24, false);
 
-        Camera.main.targetTexture = renderTexture;
-      
-        Camera.main.Render();
+        renderCamera.targetTexture = renderTexture;
+
+        renderCamera.Render();
 
         RenderTexture.active = renderTexture;
         texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
@@ -59,7 +62,11 @@ public class LetterTemplate : MonoBehaviour
         
         RenderTexture.active = null;
         Camera.main.targetTexture = null;
-        Destroy(renderTexture);
+        //Destroy(renderTexture);
+        yield return new WaitForSeconds(1);
+
+        preview.gameObject.SetActive(true);
+        gameObject.SetActive(false);
 
         Debug.Log("Saved image as: " + filePath);
     }

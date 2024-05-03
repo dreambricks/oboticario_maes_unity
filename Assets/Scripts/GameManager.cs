@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject preview;
     [SerializeField] private GameObject qRCodePrint;
     [SerializeField] private GameObject letterTemplate;
+    [SerializeField] private GameObject waitPrint;
+
+    public static string apiUrl;
 
     private void Awake()
     {
@@ -17,5 +20,14 @@ public class GameManager : MonoBehaviour
         preview.gameObject.SetActive(false);
         letterTemplate.gameObject.SetActive(false);
         qRCodePrint.gameObject.SetActive(false);
+        waitPrint.gameObject.SetActive(false);
+    }
+
+
+    public static string GetAPIUrl()
+    {
+        apiUrl = "http://localhost:5000";
+        string url = apiUrl;
+        return url;
     }
 } 

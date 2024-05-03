@@ -11,8 +11,8 @@ public class LetterTemplate : MonoBehaviour
     public Text deParaText;
 
     public GameObject objectToSave;
-    public int width = 2362;
-    public int height = 3496;
+    public int width = 1181;
+    public int height = 1748;
 
     public Sprite[] templates;
 
@@ -28,7 +28,7 @@ public class LetterTemplate : MonoBehaviour
 
     void saveImage()
     {
-        deParaText.text = phrase.deText + "\n" + phrase.paraText;
+        deParaText.text = "DE: " + phrase.deText + "\n" + "PARA: " + phrase.paraText;
 
         StartCoroutine(SaveAsImage());
 

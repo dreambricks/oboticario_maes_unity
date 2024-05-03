@@ -8,6 +8,7 @@ public class Preview : MonoBehaviour
     private string imagePath; 
     public GameObject panel;
     public Button continueButton;
+    public Text carregando;
 
     [SerializeField] private GameObject qrcode;
 
@@ -16,6 +17,7 @@ public class Preview : MonoBehaviour
         panel.GetComponent<Image>().sprite = null;
 
         StartCoroutine(LoadPreview());
+        carregando.enabled = true;
     }
 
     IEnumerator LoadPreview()
@@ -42,6 +44,8 @@ public class Preview : MonoBehaviour
 
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 panelImage.sprite = sprite;
+
+                carregando.enabled = false;
             }
             else
             {

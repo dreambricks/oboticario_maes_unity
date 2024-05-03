@@ -85,24 +85,17 @@ public class PickAPhrase : MonoBehaviour
 
     void GoToPreview()
     {
-        if (selectedButtonText != "")
+        if (selectedButtonText == null || selectedButtonText == "")
         {
-
-            deText = deInputfield.text;
-            paraText = paraInputfield.text;
-
-            letterTemplate.SetActive(true);
-            preview.gameObject.SetActive(true);
-            gameObject.SetActive(false);
-
+            error.text = "Selecione uma frase.";
         } 
-        else if (deInputfield.text == "")
+        else if (deInputfield.text == "" || deInputfield.text.Length < 2)
 
         {
             error.text = "Escreva o seu nome";
 
         }
-        else if (paraInputfield.text == "")
+        else if (paraInputfield.text == "" || paraInputfield.text.Length < 2)
 
         {
             error.text = "Escreva o nome para quem está enviando a carta";
@@ -110,7 +103,12 @@ public class PickAPhrase : MonoBehaviour
         }
         else
         {
-            error.text = "Selecione uma frase.";
+            deText = deInputfield.text.ToUpper();
+            paraText = paraInputfield.text.ToUpper();
+
+            letterTemplate.SetActive(true);
+            preview.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
   
     }

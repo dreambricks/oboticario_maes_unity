@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class Preview : MonoBehaviour
@@ -11,13 +13,25 @@ public class Preview : MonoBehaviour
     public Text carregando;
 
     [SerializeField] private GameObject qrcode;
+    [SerializeField] private BuildYourLetter buildYourLetter;
+
+
+    public float totalTime;
+    private float currentTime;
 
     private void OnEnable()
     {
+        currentTime = totalTime;
+
         panel.GetComponent<Image>().sprite = null;
 
         StartCoroutine(LoadPreview());
         carregando.enabled = true;
+    }
+
+    private void Update()
+    {
+        Countdown();
     }
 
     IEnumerator LoadPreview()
@@ -85,5 +99,23 @@ public class Preview : MonoBehaviour
     {
         qrcode.gameObject.SetActive(true);
         gameObject.SetActive(false);
+    }
+
+    public void Countdown()
+    {
+        currentTime -= Time.deltaTime;
+
+
+        if (currentTime <= 0)
+        {
+            currentTime = 0;
+
+            DataLog dataLog = new();
+            dataLog.status = StatusEnum.PAROU_EM_PREVIEW.ToString();
+            LogUtil.SendLogCSV(dataLog);
+
+            buildYourLetter.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
     }
 }

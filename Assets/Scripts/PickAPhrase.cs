@@ -1,3 +1,4 @@
+using BlackListOfWords;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class PickAPhrase : MonoBehaviour
     public InputField paraInputfield;
     [SerializeField] GameObject letterTemplate;
     [SerializeField] GameObject preview;
+    [SerializeField] private BuildYourLetter buildYourLetter;
 
     public string deText;
     public string paraText;
@@ -18,9 +20,17 @@ public class PickAPhrase : MonoBehaviour
     public string selectedButtonText;
     private Color deselectedColor;
     private Color selectedColor;
+    private BlackList blacklist;
+
+    public float totalTime;
+    private float currentTime;
 
     private void OnEnable()
     {
+        currentTime = totalTime;
+
+        blacklist = new BlackList(Application.streamingAssetsPath + "/palavras.txt");
+     
         phraseIndex = 0;
         error.text = "";
         deText = "";
@@ -54,9 +64,14 @@ public class PickAPhrase : MonoBehaviour
         selectedButtonText = "";
     }
 
+    private void Update()
+    {
+        Countdown();
+    }
+
     void ButtonClicked(int buttonIndex)
     {
-        // Percorre todos os botões
+        
         for (int i = 0; i < buttons.Length; i++)
         {
             
@@ -81,6 +96,8 @@ public class PickAPhrase : MonoBehaviour
         {
             button.onClick.RemoveAllListeners();
         }
+
+        okButton.onClick.RemoveAllListeners();
     }
 
     void GoToPreview()
@@ -88,7 +105,7 @@ public class PickAPhrase : MonoBehaviour
         if (selectedButtonText == null || selectedButtonText == "")
         {
             error.text = "Selecione uma frase.";
-        } 
+        }
         else if (deInputfield.text == "" || deInputfield.text.Length < 2)
 
         {
@@ -101,6 +118,10 @@ public class PickAPhrase : MonoBehaviour
             error.text = "Escreva o nome para quem está enviando a carta";
 
         }
+        else if (blacklist.Valid(paraInputfield.text) == false || blacklist.Valid(deInputfield.text) == false)
+        {
+            error.text = "Nome inválido";
+        }
         else
         {
             deText = deInputfield.text.ToUpper();
@@ -111,6 +132,24 @@ public class PickAPhrase : MonoBehaviour
             gameObject.SetActive(false);
         }
   
+    }
+
+    public void Countdown()
+    {
+        currentTime -= Time.deltaTime;
+
+
+        if (currentTime <= 0)
+        {
+            currentTime = 0;
+
+            DataLog dataLog = new();
+            dataLog.status = StatusEnum.FORMULARIO_INCOMPLETO.ToString();
+            LogUtil.SendLogCSV(dataLog);
+
+            buildYourLetter.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
     }
 
 }

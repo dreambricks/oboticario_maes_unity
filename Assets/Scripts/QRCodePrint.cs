@@ -9,11 +9,16 @@ public class QRCodePrint : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private GameObject waitPrint;
     [SerializeField] private PickAPhrase phrase;
+    [SerializeField] private BuildYourLetter buildYourLetter;
 
+    public float totalTime;
+    private float currentTime;
 
 
     private void OnEnable()
     {
+        currentTime = totalTime;
+
         image.sprite = null;
         printButton.onClick.AddListener(() => PrintLetter());
     }
@@ -21,6 +26,7 @@ public class QRCodePrint : MonoBehaviour
     private void Update()
     {
         TryConnectApi();
+        Countdown();
     }
 
     void PrintLetter()
@@ -69,6 +75,24 @@ public class QRCodePrint : MonoBehaviour
                 Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(.5f, .5f), 16f);
                 image.sprite = sprite;
             });
+    }
+
+    public void Countdown()
+    {
+        currentTime -= Time.deltaTime;
+
+
+        if (currentTime <= 0)
+        {
+            currentTime = 0;
+
+            DataLog dataLog = new();
+            dataLog.status = StatusEnum.PAROU_EM_QRCODE.ToString();
+            LogUtil.SendLogCSV(dataLog);
+
+            buildYourLetter.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
     }
 
 

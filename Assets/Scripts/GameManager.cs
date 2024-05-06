@@ -10,8 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject qRCodePrint;
     [SerializeField] private GameObject letterTemplate;
     [SerializeField] private GameObject waitPrint;
+    [SerializeField] private GameObject outService;
 
     public static string apiUrl;
+    private bool canPlay = true;
 
     private void Awake()
     {
@@ -23,11 +25,27 @@ public class GameManager : MonoBehaviour
         waitPrint.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        DisableEnable();
+    }
+
 
     public static string GetAPIUrl()
     {
         apiUrl = "http://localhost:5000";
         string url = apiUrl;
         return url;
+    }
+
+
+    void DisableEnable()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            canPlay = !canPlay;
+            outService.gameObject.SetActive(!canPlay);
+
+        }
     }
 } 

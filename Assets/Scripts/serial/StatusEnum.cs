@@ -1,5 +1,8 @@
 public enum StatusEnum
 {
-    Jogou,
-    NaoJogou
+    FORMULARIO_INCOMPLETO,
+    PAROU_EM_PREVIEW,
+    PAROU_EM_QRCODE,
+    CARTA_IMPRESSA
+
 }
